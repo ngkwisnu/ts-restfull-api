@@ -89,3 +89,28 @@ describe('POST /api/v1/users/login', () => {
     })
 
 })
+
+describe('GET /api/v1/users/current', () => {
+
+    it('should be reject get user if token invalid', async () => {
+        const response = await supertest(web)
+            .get('/api/v1/users/current')
+            .set("X-TOKEN-API", "wrong-token")
+
+        logger.debug(response.body)
+        expect(response.status).toBe(401)
+        expect(response.body.errors).toBeDefined()
+    })
+
+    it('should be able to get user', async () => {
+        const response = await supertest(web)
+            .get('/api/v1/users/current')
+            .set("X-TOKEN-API", "06c92f55-3ba7-4792-911a-0c017a947ff4")
+        
+        logger.debug(response.body)
+        expect(response.status).toBe(200)
+        expect(response.body.data.username).toBe("Wisnu")
+        expect(response.body.data.name).toBe("Ngakan Wisnu")
+    })
+
+})

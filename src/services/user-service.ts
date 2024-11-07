@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import { CreateUserRequest, LoginRequest, toUserResponse, UserResponse } from "../model/user-model";
 import { UserValidation } from "../validation/user-valiation";
 import { Validation } from "../validation/validation";
@@ -6,6 +6,7 @@ import { prismaClient } from "../application/databases";
 import { ResponseError } from "../error/response-error";
 import bcrypt from 'bcrypt'
 import { v4 as uuid } from "uuid";
+import { UserRequest } from "../type/user-request";
 
 export class UserService {
     static async register (request: CreateUserRequest) : Promise<UserResponse> {
@@ -60,5 +61,9 @@ export class UserService {
         const response = toUserResponse(user)
         response.token = user.token!
         return response
+    }
+
+    static async get (user: User) : Promise<UserResponse> {
+        return toUserResponse(user)
     }
 }
